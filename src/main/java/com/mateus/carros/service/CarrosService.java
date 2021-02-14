@@ -1,13 +1,15 @@
 package com.mateus.carros.service;
 		
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.mateus.carros.domain.Carro;
+import com.mateus.carros.dto.CarroDTO;
 import com.mateus.carros.repository.CarroRepository;
 
 @Service
@@ -16,15 +18,21 @@ public class CarrosService {
 	@Autowired
 	private CarroRepository repository;
 	
-	public Iterable<Carro> getCarros(){
-		return repository.findAll();
+	public List<CarroDTO> getCarros(){
+		List<Carro> carros = repository.findAll();
+		List<CarroDTO> list = new ArrayList<>();
+		for (Carro c : carros) {
+			list.add(new CarroDTO(c));
+		}
+		return list;
 	}
+		
 	
-	public Optional<Carro> getCarro(Long id){
-		return repository.findById(id);
+	public Optional<CarroDTO> getCarro(Long id){
+		return repository.findById(id).map(CarroDTO::new);
 	}
-	public Iterable<Carro> getTipo(String tipo){
-		return repository.findByTipo(tipo);
+	public List<CarroDTO> getTipo(String tipo){
+		return repository.findByTipo(tipo).stream().map(CarroDTO::new).collect(Collectors.toList());
 	}
 	
 	public Carro salvar(Carro carro) {
@@ -32,14 +40,15 @@ public class CarrosService {
 	}
 	
 	public void deletar(Long id) {
-		Optional<Carro> carro = getCarro(id);
-		if(carro.isPresent()) {
+	
+		if(getCarro(id).isPresent()) {
 		 repository.deleteById(id);
 		}
 	}
 
-	public Carro aletar(Carro carro, Long id) {
-		Optional<Carro> optional = getCarro(id);
+	/*
+	public CarroDTO aletar(Carro carro, Long id) {
+		Optional<CarroDTO> optional = getCarro(id);
 		if(optional.isPresent()) {
 			Carro db = optional.get();
 			db.setNome(carro.getNome());
@@ -49,5 +58,5 @@ public class CarrosService {
 			throw new RuntimeException("Não foi possivel atualizar o Registro!");
 		}
 	}
-
+*/
 }

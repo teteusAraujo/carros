@@ -1,10 +1,12 @@
 package com.mateus.carros.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mateus.carros.domain.Carro;
 
-public interface CarroRepository extends CrudRepository<Carro, Long>{
+public interface CarroRepository extends JpaRepository<Carro, Long>{
 	
-	Iterable<Carro> findByTipo(String tipo);
+	List<Carro> findByTipo(String tipo);
 }
