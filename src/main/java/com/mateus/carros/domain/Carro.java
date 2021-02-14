@@ -6,10 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
-@Entity
+@Entity // Quer dizer que vai ser uma tabela do nosso Banco de dados
 public class Carro {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id //Significa que esse é a chave primaria da nossa tabela carro
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // O id seja feito autoencremento só
 	private Long id;
 	
 	private String nome;

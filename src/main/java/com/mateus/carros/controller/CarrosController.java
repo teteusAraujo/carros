@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import com.mateus.carros.domain.Carro;
 import com.mateus.carros.service.CarrosService;
 
 @RestController
-@RequestMapping("/carros")
+@RequestMapping("/carros")  //Quer dizer que essa classe estará mapeada para /carros
 public class CarrosController {
 	
 	@Autowired
@@ -26,6 +27,7 @@ public class CarrosController {
 	public Iterable<Carro> listarCarros() {
 		return service.getCarros();
 	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity listarCarro(@PathVariable("id") Long id){
 		Optional<Carro> carro = service.getCarro(id);
@@ -43,8 +45,13 @@ public class CarrosController {
 	}
 	
 	@PostMapping
-	public Carro salvarCarro(@RequestBody Carro carro) { // @RequestBody transforma um Json em objeto
+	public Carro salvarCarro(@RequestBody Carro carro) { // @RequestBody transforma um Json em umobjeto
 		return service.salvar(carro);
+	}
+	
+	@PutMapping("/{id}")
+	public Carro alterarCarro(@PathVariable("id") Long id, @RequestBody Carro carro) {
+		return service.aletar(carro,id);
 	}
 	
 	@DeleteMapping("/{id}")

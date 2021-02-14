@@ -2,8 +2,10 @@ package com.mateus.carros.service;
 		
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import com.mateus.carros.domain.Carro;
 import com.mateus.carros.repository.CarroRepository;
@@ -33,6 +35,18 @@ public class CarrosService {
 		Optional<Carro> carro = getCarro(id);
 		if(carro.isPresent()) {
 		 repository.deleteById(id);
+		}
+	}
+
+	public Carro aletar(Carro carro, Long id) {
+		Optional<Carro> optional = getCarro(id);
+		if(optional.isPresent()) {
+			Carro db = optional.get();
+			db.setNome(carro.getNome());
+			db.setTipo(carro.getTipo());
+			return repository.save(db);
+		} else {
+			throw new RuntimeException("Não foi possivel atualizar o Registro!");
 		}
 	}
 
