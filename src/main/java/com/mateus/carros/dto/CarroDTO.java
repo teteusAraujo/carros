@@ -7,8 +7,11 @@ import javax.persistence.Id;
 
 import com.mateus.carros.domain.Carro;
 
+import lombok.Data;
+
 @Entity
-public class CarroDTO {
+@Data
+public class CarroDTO { //Basicamente será um objeto resumido da classe carro
 	
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
@@ -18,67 +21,11 @@ public class CarroDTO {
 	
 	private String tipo;
 	
-	public CarroDTO() {
-		
-	}
-
 	public CarroDTO(Carro c) {
-		super();
-		this.id = c.getId();
-		this.nome = c.getNome();
-		this.tipo = c.getTipo();
+		id = c.getId();
+		nome = c.getNome();
+		tipo = c.getTipo();
 	}
-
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	
-	public String getTipo() {
-		return tipo;
-	}
-	
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CarroDTO other = (CarroDTO) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-	
 	
 
 }

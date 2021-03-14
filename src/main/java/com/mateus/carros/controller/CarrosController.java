@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,14 +27,13 @@ public class CarrosController {
 	private CarrosService service;
 	
 	@GetMapping
-	public List<CarroDTO> listarCarros() {
-		return service.getCarros();
+	public ResponseEntity listarCarros() {
+		return ResponseEntity.ok(service.getCarros());
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity listarCarro(@PathVariable("id") Long id){
 		Optional<CarroDTO> carro = service.getCarro(id);
-		
 		if(carro.isPresent()) {
 			return ResponseEntity.ok(carro.get());
 		} else {
@@ -42,20 +42,26 @@ public class CarrosController {
 	}
 	
 	@GetMapping("/tipo/{tipo}")
-	public List<CarroDTO> listarTipo(@PathVariable("tipo") String tipo){
-		return service.getTipo(tipo);
+	public ResponseEntity listarTipo(@PathVariable("tipo") String tipo){
+		List<CarroDTO> carros = service.getTipo(tipo);
+		return  carros.isEmpty() ?
+				ResponseEntity.noContent().build() :
+					ResponseEntity.ok(carros);
 	}
 	
 	@PostMapping
-	public Carro salvarCarro(@RequestBody Carro carro) { // @RequestBody transforma um Json em umobjeto
-		return service.salvar(carro);
+	public Carro salvarCarro(@RequestBody Carro carro) { // @RequestBody transforma um Json em um objeto
+		List<Carro> carros = service.getTipo(tipo);
+		return carros.isEmpty() ?
+				ResponseEntity.noContent().build() :
+				ResponseEntity.ok();
 	}
-	/*
+	
 	@PutMapping("/{id}")
-	public Carro alterarCarro(@PathVariable("id") Long id, @RequestBody Carro carro) {
-		return service.aletar(carro,id);
+	public CarroDTO alterarCarro(@PathVariable("id") Long id, @RequestBody Carro carro) {
+		return service.alterar(carro, id);
 	}
-	*/
+
 	@DeleteMapping("/{id}")
 	public void deletarCarro(@PathVariable("id") Long id) {
 		service.deletar(id);

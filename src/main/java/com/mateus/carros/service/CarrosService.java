@@ -26,11 +26,11 @@ public class CarrosService {
 		}
 		return list;
 	}
-		
-	
+			
 	public Optional<CarroDTO> getCarro(Long id){
 		return repository.findById(id).map(CarroDTO::new);
 	}
+	
 	public List<CarroDTO> getTipo(String tipo){
 		return repository.findByTipo(tipo).stream().map(CarroDTO::new).collect(Collectors.toList());
 	}
@@ -46,17 +46,20 @@ public class CarrosService {
 		}
 	}
 
-	/*
-	public CarroDTO aletar(Carro carro, Long id) {
+
+
+	public CarroDTO alterar(Carro carro, Long id) {
 		Optional<CarroDTO> optional = getCarro(id);
 		if(optional.isPresent()) {
-			Carro db = optional.get();
+			CarroDTO db = optional.get();
 			db.setNome(carro.getNome());
 			db.setTipo(carro.getTipo());
-			return repository.save(db);
+			return repository.save((Iterable<S>) db);
 		} else {
 			throw new RuntimeException("Não foi possivel atualizar o Registro!");
 		}
 	}
-*/
+
+
+
 }
