@@ -1,11 +1,11 @@
 package com.mateus.carros.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mateus.carros.domain.Carro;
 import com.mateus.carros.dto.CarroDTO;
@@ -50,16 +51,27 @@ public class CarrosController {
 	}
 	
 	@PostMapping
-	public Carro salvarCarro(@RequestBody Carro carro) { // @RequestBody transforma um Json em um objeto
-		List<Carro> carros = service.getTipo(tipo);
-		return carros.isEmpty() ?
-				ResponseEntity.noContent().build() :
-				ResponseEntity.ok();
+	public ResponseEntity salvarCarro(@RequestBody Carro carro) { // @RequestBody transforma um Json em um objeto
+		try {
+			CarroDTO c = service.salvar(carro);
+			URI location = getUri(c.getId());
+			return ResponseEntity.created(location).build();
+			
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	private URI getUri(Long id) {
+		return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
 	}
 	
 	@PutMapping("/{id}")
-	public CarroDTO alterarCarro(@PathVariable("id") Long id, @RequestBody Carro carro) {
-		return service.alterar(carro, id);
+	public ResponseEntity alterarCarro(@PathVariable("id") Long id, @RequestBody Carro carro) {
+		CarroDTO c = service.alterar(carro, id);
+		return c!= null ?
+				ResponseEntity.ok(c):
+					ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{id}")

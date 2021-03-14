@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.mateus.carros.domain.Carro;
 import com.mateus.carros.dto.CarroDTO;
@@ -22,21 +23,22 @@ public class CarrosService {
 		List<Carro> carros = repository.findAll();
 		List<CarroDTO> list = new ArrayList<>();
 		for (Carro c : carros) {
-			list.add(new CarroDTO(c));
+			list.add(new CarroDTO());
 		}
 		return list;
 	}
 			
 	public Optional<CarroDTO> getCarro(Long id){
-		return repository.findById(id).map(CarroDTO::new);
+		return repository.findById(id).map(CarroDTO::create);
 	}
 	
 	public List<CarroDTO> getTipo(String tipo){
-		return repository.findByTipo(tipo).stream().map(CarroDTO::new).collect(Collectors.toList());
+		return repository.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
 	}
 	
-	public Carro salvar(Carro carro) {
-		return repository.save(carro);
+	public CarroDTO salvar(Carro carro) {
+		Assert.notNull(carro.getId(), "Não foi possivel inserir o novo Carro!");
+		return CarroDTO.create(repository.save(carro));
 	}
 	
 	public void deletar(Long id) {
@@ -49,12 +51,13 @@ public class CarrosService {
 
 
 	public CarroDTO alterar(Carro carro, Long id) {
-		Optional<CarroDTO> optional = getCarro(id);
+		Assert.notNull(carro.getId(), "Não foi possivel atualizar o Carro!");
+		Optional<Carro> optional = repository.findById(id);
 		if(optional.isPresent()) {
-			CarroDTO db = optional.get();
+			Carro db = optional.get();
 			db.setNome(carro.getNome());
-			db.setTipo(carro.getTipo());
-			return repository.save((Iterable<S>) db);
+			db.setTipo(carro.getTipo ());
+			return  CarroDTO.create(db);
 		} else {
 			throw new RuntimeException("Não foi possivel atualizar o Registro!");
 		}
