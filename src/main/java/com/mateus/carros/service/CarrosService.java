@@ -21,10 +21,7 @@ public class CarrosService {
 	
 	public List<CarroDTO> getCarros(){
 		List<Carro> carros = repository.findAll();
-		List<CarroDTO> list = new ArrayList<>();
-		for (Carro c : carros) {
-			list.add(new CarroDTO());
-		}
+		List<CarroDTO> list = carros.stream().map(c -> new CarroDTO(c)).collect(Collectors.toList());
 		return list;
 	}
 			

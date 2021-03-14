@@ -28,7 +28,7 @@ public class CarrosController {
 	private CarrosService service;
 	
 	@GetMapping
-	public ResponseEntity listarCarros() {
+	public ResponseEntity<Iterable<CarroDTO>> listarCarros() {
 		return ResponseEntity.ok(service.getCarros());
 	}
 	
